@@ -11,9 +11,8 @@ public class CallListener extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        Toast.makeText(cordova.getActivity(), "CallListener", Toast.LENGTH_LONG).show();
         if ("show".equals(action)) {
-          Toast.makeText(cordova.getActivity(), "show", Toast.LENGTH_LONG).show();
+          Toast.makeText(cordova.getActivity(), "CallListener show " + args.get(0), Toast.LENGTH_LONG).show();
             return true;
         }
         return false;
