@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
 import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -12,6 +13,7 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -23,6 +25,7 @@ public class CallListener extends CordovaPlugin {
   private PhoneStateListener phoneStateListener;
   private CallbackContext callbackContext;
 
+  @SuppressLint("MissingPermission")
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     if ("getCallTime".equals(action)) {
@@ -34,15 +37,18 @@ public class CallListener extends CordovaPlugin {
             if (aBoolean) {
               try {
                 String mobile = args.getString(0);
-                @SuppressLint("MissingPermission")
-                Cursor cursor = cordova.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI, new String[]{CallLog.Calls.DATE, CallLog.Calls.DURATION}, CallLog.Calls.NUMBER + "=?", new String[]{mobile}, CallLog.Calls.DEFAULT_SORT_ORDER);
-                int duration = 0;
-                if (cursor.moveToFirst()) {
-                  duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
-                }
-                callbackContext.success(duration);
+                new Handler().postDelayed(new Runnable() {
+                  @Override
+                  public void run() {
+                    Cursor cursor = cordova.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI, new String[]{CallLog.Calls.DATE, CallLog.Calls.DURATION}, CallLog.Calls.NUMBER + "=?", new String[]{mobile}, CallLog.Calls.DEFAULT_SORT_ORDER);
+                    int duration = 0;
+                    if (cursor.moveToFirst()) {
+                      duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
+                    }
+                    callbackContext.success(duration);
+                  }
+                }, 50);
               } catch (Exception e) {
-                e.printStackTrace();
                 callbackContext.success(0);
               }
             } else {
@@ -51,7 +57,7 @@ public class CallListener extends CordovaPlugin {
           }
         });
       return true;
-    } else if ("listener".equals(action)) {
+    } else if ("addListener".equals(action)) {
       new RxPermissions(cordova.getActivity())
         .request(Manifest.permission.READ_PHONE_STATE, Manifest.permission.PROCESS_OUTGOING_CALLS)
         .subscribe(new Action1<Boolean>() {
@@ -89,19 +95,13 @@ public class CallListener extends CordovaPlugin {
       public void onCallStateChanged(int state, String phoneNumber) {
         switch (state) {
           case TelephonyManager.CALL_STATE_IDLE://空闲
-            if (callbackContext != null) {
-              callbackContext.success(1);
-            }
+           success(1);
             break;
           case TelephonyManager.CALL_STATE_RINGING://响铃
-            if (callbackContext != null) {
-              callbackContext.success(2);
-            }
+            success(2);
             break;
           case TelephonyManager.CALL_STATE_OFFHOOK://通话
-            if (callbackContext != null) {
-              callbackContext.success(3);
-            }
+            success(3);
             break;
         }
       }
@@ -115,6 +115,14 @@ public class CallListener extends CordovaPlugin {
    */
   private void unregisterListener() {
     telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+  }
+
+  private void success(int message){
+    if (callbackContext != null) {
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+      pluginResult.setKeepCallback(true);
+      callbackContext.sendPluginResult(pluginResult);
+    }
   }
 
 }
