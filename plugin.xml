@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-calllistener" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>CallListener</name>
+    <js-module name="CallListener" src="www/CallListener.js">
+        <clobbers target="CallListener" />
+    </js-module>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="CallListener">
+                <param name="android-package" value="org.apache.cordova.calllistener.CallListener"/>
+            </feature>
+        </config-file>
+        <source-file src="src/android/CallListener.java" target-dir="src/org/apache/cordova/calllistener" />
+    </platform>
+
+</plugin>

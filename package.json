@@ -1,0 +1,25 @@
+{
+  "name": "cordova-plugin-calllistener",
+  "version": "1.0.3",
+  "description": "Cordova CallListener Plugin",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "cordova": {
+    "id": "cordova-plugin-calllistener",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "cordova-plugin-calllistener",
+    "calllistener",
+    "cordova-android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaoshouyun/cordova-plugin-calllistener.git"
+  },
+  "author": "yaoshouyun",
+  "license": "Apache-2.0"
+}
