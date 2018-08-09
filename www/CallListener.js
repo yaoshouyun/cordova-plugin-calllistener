@@ -1,11 +1,10 @@
 var exec = require('cordova/exec');
 
-var CallListener = {
+exports.getCallTime = function (successCallback, errorCallback, mobile) {
+    exec(successCallback, errorCallback, 'CallListener', 'getCallTime', [mobile]);
+};
 
-    show : function (msg) {
-        exec(null, null, 'CallListener', 'show', [msg]);
-    },
+exports.listener = function (successCallback) {
+    exec(successCallback, null, 'CallListener', 'listener', []);
+};
 
-}
-
-module.exports = CallListener;
