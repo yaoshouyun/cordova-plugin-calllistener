@@ -28,46 +28,56 @@ public class CallListener extends CordovaPlugin {
   @SuppressLint("MissingPermission")
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    if ("getCallTime".equals(action)) {
-      new RxPermissions(cordova.getActivity())
-        .request(Manifest.permission.READ_CALL_LOG)
-        .subscribe(new Action1<Boolean>() {
-          @Override
-          public void call(Boolean aBoolean) {
-            if (aBoolean) {
-              try {
-                String mobile = args.getString(0);
-                new Handler().postDelayed(new Runnable() {
-                  @Override
-                  public void run() {
-                    Cursor cursor = cordova.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI, new String[]{CallLog.Calls.DATE, CallLog.Calls.DURATION}, CallLog.Calls.NUMBER + "=?", new String[]{mobile}, CallLog.Calls.DEFAULT_SORT_ORDER);
-                    int duration = 0;
-                    if (cursor.moveToFirst()) {
-                      duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
-                    }
-                    callbackContext.success(duration);
-                  }
-                }, 50);
-              } catch (Exception e) {
-                callbackContext.success(0);
+    if ("addListener".equals(action)) {
+      cordova.getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          new RxPermissions(cordova.getActivity())
+            .request(Manifest.permission.READ_PHONE_STATE, Manifest.permission.PROCESS_OUTGOING_CALLS)
+            .subscribe(new Action1<Boolean>() {
+              @Override
+              public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                  CallListener.this.callbackContext = callbackContext;
+                }
               }
-            } else {
-              callbackContext.success(0);
-            }
-          }
-        });
+            });
+        }
+      });
       return true;
-    } else if ("addListener".equals(action)) {
-      new RxPermissions(cordova.getActivity())
-        .request(Manifest.permission.READ_PHONE_STATE, Manifest.permission.PROCESS_OUTGOING_CALLS)
-        .subscribe(new Action1<Boolean>() {
-          @Override
-          public void call(Boolean aBoolean) {
-            if (aBoolean) {
-              CallListener.this.callbackContext = callbackContext;
-            }
-          }
-        });
+    } else if ("getCallTime".equals(action)) {
+      cordova.getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          new RxPermissions(cordova.getActivity())
+            .request(Manifest.permission.READ_CALL_LOG)
+            .subscribe(new Action1<Boolean>() {
+              @Override
+              public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                  try {
+                    String mobile = args.getString(0);
+                    new Handler().postDelayed(new Runnable() {
+                      @Override
+                      public void run() {
+                        Cursor cursor = cordova.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI, new String[]{CallLog.Calls.DATE, CallLog.Calls.DURATION}, CallLog.Calls.NUMBER + "=?", new String[]{mobile}, CallLog.Calls.DEFAULT_SORT_ORDER);
+                        int duration = 0;
+                        if (cursor.moveToFirst()) {
+                          duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
+                        }
+                        callbackContext.success(duration);
+                      }
+                    }, 100);
+                  } catch (Exception e) {
+                    callbackContext.success(0);
+                  }
+                } else {
+                  callbackContext.success(0);
+                }
+              }
+            });
+        }
+      });
       return true;
     }
     return false;
@@ -95,7 +105,7 @@ public class CallListener extends CordovaPlugin {
       public void onCallStateChanged(int state, String phoneNumber) {
         switch (state) {
           case TelephonyManager.CALL_STATE_IDLE://空闲
-           success(1);
+            success(1);
             break;
           case TelephonyManager.CALL_STATE_RINGING://响铃
             success(2);
@@ -117,7 +127,7 @@ public class CallListener extends CordovaPlugin {
     telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
   }
 
-  private void success(int message){
+  private void success(int message) {
     if (callbackContext != null) {
       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
       pluginResult.setKeepCallback(true);
