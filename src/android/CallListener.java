@@ -60,7 +60,7 @@ public class CallListener extends CordovaPlugin {
                     new Handler().postDelayed(new Runnable() {
                       @Override
                       public void run() {
-                        Cursor cursor = cordova.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI, new String[]{CallLog.Calls.DATE, CallLog.Calls.DURATION}, CallLog.Calls.NUMBER + "=?", new String[]{mobile}, CallLog.Calls.DEFAULT_SORT_ORDER);
+                        Cursor cursor = cordova.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI, new String[]{CallLog.Calls.DURATION}, CallLog.Calls.NUMBER + "=?", new String[]{mobile}, CallLog.Calls.DEFAULT_SORT_ORDER);
                         int duration = 0;
                         if (cursor.moveToFirst()) {
                           duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
