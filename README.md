@@ -1,3 +1,5 @@
+  ```javascript
+
   created () {
     setTimeout(function () {
       /* 监听电话状态（1空闲、2响铃、3通话） */
@@ -19,3 +21,5 @@
       })
     },3000)
   },
+
+  ```
