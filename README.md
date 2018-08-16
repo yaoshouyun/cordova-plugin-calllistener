@@ -1,3 +1,5 @@
+cordova plugin add cordova-plugin-calllistener
+
   ```javascript
 
   created () {
@@ -6,10 +8,10 @@
       CallListener.addListener((state) => {
         if (state == 1) {
           /* 获取通话时长（单位秒） */
-          CallListener.getCallTime((time) => {
+          CallListener.getCallInfo((info) => {
             Toast.text({
               duration: 3000,
-              message: '电话状态：' + state + '，通话时长：' + time
+              message: '电话状态：' + state + '，通话时长：' + info.duration + '，开始时间：' + info.startDate + '，结束时间：' + info.endDate
             })
           }, '13207180317')
         } else {
@@ -19,7 +21,7 @@
           })
         }
       })
-    },3000)
+    },1000)
   },
 
   ```

@@ -16,6 +16,9 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 
 import rx.functions.Action1;
 
@@ -24,6 +27,8 @@ public class CallListener extends CordovaPlugin {
   private TelephonyManager telephonyManager;
   private PhoneStateListener phoneStateListener;
   private CallbackContext callbackContext;
+  private long startDate;
+  private long endDate;
 
   @SuppressLint("MissingPermission")
   @Override
@@ -45,7 +50,7 @@ public class CallListener extends CordovaPlugin {
         }
       });
       return true;
-    } else if ("getCallTime".equals(action)) {
+    } else if ("getCallInfo".equals(action)) {
       cordova.getActivity().runOnUiThread(new Runnable() {
         @Override
         public void run() {
@@ -65,9 +70,23 @@ public class CallListener extends CordovaPlugin {
                         if (cursor.moveToFirst()) {
                           duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
                         }
-                        callbackContext.success(duration);
+                        JSONObject object = new JSONObject();
+                        try {
+                          startDate = endDate - duration * 1000;
+                          if (startDate < 0) {
+                            startDate = 0;
+                          }
+                          object.put("startDate", formaDatet(startDate));
+                          object.put("endDate", formaDatet(endDate));
+                          object.put("duration", duration);
+                        } catch (JSONException e) {
+                          e.printStackTrace();
+                        }
+                        callbackContext.success(object);
+                        startDate = 0;
+                        endDate = 0;
                       }
-                    }, 100);
+                    }, 80);
                   } catch (Exception e) {
                     callbackContext.success(0);
                   }
@@ -96,6 +115,11 @@ public class CallListener extends CordovaPlugin {
     unregisterListener();
   }
 
+  private String formaDatet(long date) {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    return format.format(date);
+  }
+
   /**
    * 注册监听电话状态
    */
@@ -105,6 +129,7 @@ public class CallListener extends CordovaPlugin {
       public void onCallStateChanged(int state, String phoneNumber) {
         switch (state) {
           case TelephonyManager.CALL_STATE_IDLE://空闲
+            endDate = System.currentTimeMillis();
             success(1);
             break;
           case TelephonyManager.CALL_STATE_RINGING://响铃
