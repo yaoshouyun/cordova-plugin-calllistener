@@ -27,7 +27,6 @@ public class CallListener extends CordovaPlugin {
   private TelephonyManager telephonyManager;
   private PhoneStateListener phoneStateListener;
   private CallbackContext callbackContext;
-  private long startDate;
   private long endDate;
 
   @SuppressLint("MissingPermission")
@@ -72,18 +71,17 @@ public class CallListener extends CordovaPlugin {
                         }
                         JSONObject object = new JSONObject();
                         try {
-                          startDate = endDate - duration * 1000;
+                          long startDate = endDate - duration * 1000;
                           if (startDate < 0) {
                             startDate = 0;
                           }
-                          object.put("startDate", formaDatet(startDate));
-                          object.put("endDate", formaDatet(endDate));
+                          object.put("start", formaDatet(startDate));
+                          object.put("end", formaDatet(endDate));
                           object.put("duration", duration);
                         } catch (JSONException e) {
                           e.printStackTrace();
                         }
                         callbackContext.success(object);
-                        startDate = 0;
                         endDate = 0;
                       }
                     }, 80);
