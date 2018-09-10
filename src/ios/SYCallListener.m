@@ -22,16 +22,14 @@
 {
     NSLog(@"Added Call Listener.");
     
-    __block CDVPluginResult* pluginResult = nil;
-    [pluginResult setKeepCallbackAsBool:true];
+    __block CDVPluginResult* pluginResult = nil;    
     self.objCallCenter = [[CTCallCenter alloc] init];
     __block CDVPlugin *blockSelf = self;
     self.objCallCenter.callEventHandler = ^(CTCall* call) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:[self parseStatus:call]];
+        [pluginResult setKeepCallbackAsBool:true];
         [blockSelf.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    };
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    };  
 }
 
 
