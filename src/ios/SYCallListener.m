@@ -71,7 +71,7 @@
 {
     CDVPluginResult* pluginResult = nil;
     
-    if (self.record.duration > 0) {
+    if (self.record.callID) {
         NSDictionary *recordDict = [[NSDictionary alloc]
                                     initWithObjectsAndKeys:
                                     @(self.record.duration), @"duration",
