@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-calllistener",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Cordova CallListener Plugin",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -8,13 +8,16 @@
   "cordova": {
     "id": "cordova-plugin-calllistener",
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   },
   "keywords": [
     "cordova-plugin-calllistener",
+    "cordova-plugin",
     "calllistener",
-    "cordova-android"
+    "cordova-android",
+    "cordova-ios"
   ],
   "repository": {
     "type": "git",

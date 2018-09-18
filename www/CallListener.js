@@ -1,10 +1,16 @@
 var exec = require('cordova/exec');
 
-exports.getCallInfo = function (successCallback,  mobile) {
+// 获取指定手机号码的通话记录
+exports.getCallInfo = function (successCallback, mobile) {
     exec(successCallback, null, 'CallListener', 'getCallInfo', [mobile]);
 };
 
-exports.addListener = function (successCallback,errorCallback) {
+// 添加电话状态监听
+exports.addListener = function (successCallback, errorCallback) {
     exec(successCallback, errorCallback, 'CallListener', 'addListener', []);
 };
 
+// 呼叫指定的手机号码
+exports.callMobile = function (successCallback, mobile) {
+    exec(successCallback, null, 'CallListener', 'callMobile', [mobile]);
+};
