@@ -11,6 +11,6 @@ exports.addListener = function (successCallback, errorCallback) {
 };
 
 // 呼叫指定的手机号码
-exports.callMobile = function (successCallback, mobile) {
-    exec(successCallback, null, 'CallListener', 'callMobile', [mobile]);
+exports.callMobile = function (mobile) {
+    exec(null, null, 'CallListener', 'callMobile', [mobile]);
 };

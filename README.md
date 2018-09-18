@@ -14,6 +14,8 @@ cordova plugin add cordova-plugin-calllistener
               message: '电话状态：' + state + '，通话时长：' + info.duration + '，开始时间：' + info.start + '，结束时间：' + info.end
             })
           }, '13207180317')
+          /* 呼叫指定的手机号码 */
+          CallListener.callMobile('13207180317')
         } else {
           Toast.text({
             duration: 3000,
