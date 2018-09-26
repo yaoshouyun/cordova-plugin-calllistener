@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-calllistener",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Cordova CallListener Plugin",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

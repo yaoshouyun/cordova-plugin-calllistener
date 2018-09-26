@@ -30,6 +30,7 @@ public class CallListener extends CordovaPlugin {
     private PhoneStateListener phoneStateListener;
     private CallbackContext callbackContext;
     private long endDate;
+    private long startDate;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -109,7 +110,7 @@ public class CallListener extends CordovaPlugin {
                                                 CallInfo model = queryCallInfo(mobile);
                                                 if (Build.BRAND.equalsIgnoreCase("huawei") || Build.BRAND.equalsIgnoreCase("honor") || Build.BRAND.equalsIgnoreCase("meizu")) {
                                                     if (model.duration > 0) {
-                                                        if (endDate - (model.date + model.duration * 1000) < 5000) {//如果5秒内电话未接通则认为没打通
+                                                        if (endDate - (startDate + model.duration * 1000) < 5000) {//如果5秒内电话未接通则认为没打通
                                                             model.duration = 0;
                                                         }
                                                     }
@@ -124,6 +125,7 @@ public class CallListener extends CordovaPlugin {
                                                 }
                                                 callbackContext.success(object);
                                                 endDate = 0;
+                                                startDate = 0;
                                             }
                                         }, 1000);
                                     } catch (Exception e) {
@@ -172,6 +174,7 @@ public class CallListener extends CordovaPlugin {
                         success(2);
                         break;
                     case TelephonyManager.CALL_STATE_OFFHOOK://通话
+                        startDate = System.currentTimeMillis();
                         success(3);
                         break;
                 }
