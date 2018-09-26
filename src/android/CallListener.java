@@ -10,9 +10,7 @@ import android.os.Handler;
 import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
-import android.widget.Toast;
-
+import android.os.Build;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.apache.cordova.CallbackContext;
