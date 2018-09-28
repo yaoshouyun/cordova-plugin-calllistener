@@ -56,6 +56,7 @@ public class CallListener extends CordovaPlugin {
                 new RxPermissions(cordova.getActivity())
                         .request(Manifest.permission.CALL_PHONE)
                         .subscribe(new Action1<Boolean>() {
+                            @SuppressLint("MissingPermission")
                             @Override
                             public void call(Boolean aBoolean) {
                                 if (aBoolean) {
@@ -108,10 +109,14 @@ public class CallListener extends CordovaPlugin {
                                             @Override
                                             public void run() {
                                                 CallInfo model = queryCallInfo(mobile);
-                                                if (Build.BRAND.equalsIgnoreCase("huawei") || Build.BRAND.equalsIgnoreCase("honor") || Build.BRAND.equalsIgnoreCase("meizu")) {
-                                                    if (model.duration > 0) {
-                                                        if (endDate - (startDate + model.duration * 1000) < 5000) {//如果5秒内电话未接通则认为没打通
-                                                            model.duration = 0;
+                                                if (model.duration < 93 && model.duration > 0){//正常不会超过90秒
+                                                    if (Build.BRAND.equalsIgnoreCase("huawei") || Build.BRAND.equalsIgnoreCase("honor") || Build.BRAND.equalsIgnoreCase("meizu")) {
+                                                        if(endDate - startDate < 5000){
+                                                           model.duration = 0;
+                                                        }else{
+                                                            if (endDate - startDate - model.duration * 1000 < 5000) {//如果5秒内电话未接通则认为没打通
+                                                                model.duration = 0;
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -199,6 +204,7 @@ public class CallListener extends CordovaPlugin {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private CallInfo queryCallInfo(String mobile) {
         CallInfo model = new CallInfo();
         Cursor cursor = cordova.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI, new String[]{
