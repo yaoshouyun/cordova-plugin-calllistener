@@ -110,7 +110,7 @@ public class CallListener extends CordovaPlugin {
                                             public void run() {
                                                 CallInfo model = queryCallInfo(mobile);
                                                 if (model.duration < 93 && model.duration > 0){//正常不会超过90秒
-                                                    if (Build.BRAND.equalsIgnoreCase("huawei") || Build.BRAND.equalsIgnoreCase("honor") || Build.BRAND.equalsIgnoreCase("meizu")) {
+                                                    if (Build.BRAND.equalsIgnoreCase("vivo") || Build.BRAND.equalsIgnoreCase("huawei") || Build.BRAND.equalsIgnoreCase("honor") || Build.BRAND.equalsIgnoreCase("meizu")) {
                                                         if(endDate - startDate < 5000){
                                                            model.duration = 0;
                                                         }else{
