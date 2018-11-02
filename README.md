@@ -1,4 +1,5 @@
-cordova plugin add cordova-plugin-calllistener
+### 功能：监听电话状态和获取通话时长
+### cordova plugin add cordova-plugin-calllistener
 
   ```javascript
 
