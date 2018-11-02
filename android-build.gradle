@@ -1,0 +1,9 @@
+repositories {
+    jcenter()
+    maven { url 'https://www.jitpack.io' }
+}
+
+dependencies {
+    compile 'io.reactivex:rxjava:1.2.0'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
+}
